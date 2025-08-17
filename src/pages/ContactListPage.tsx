@@ -1,23 +1,24 @@
-import { memo, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { ContactCard } from 'src/components/ContactCard'
 import { FilterForm, FilterFormValues } from 'src/components/FilterForm'
-import { useAppSelector } from 'src/store/hooks'
+import { useGetContacts, useGetGroupContacts } from 'src/hooks'
 import { ContactDto } from 'src/types/dto/ContactDto'
 
-export const ContactListPage = memo(() => {
-  const { contacts } = useAppSelector(state => state.contacts)
-  const { groupContacts } = useAppSelector(state => state.groupContacts)
+export const ContactListPage = observer(() => {
+  const contactsList = useGetContacts()
+  const groupContactsList = useGetGroupContacts()
 
   const [filteredContacts, setFilteredContacts] =
-    useState<ContactDto[]>(contacts)
+    useState<ContactDto[]>(contactsList)
 
   useEffect(() => {
-    setFilteredContacts(contacts)
-  }, [contacts])
+    setFilteredContacts(contactsList)
+  }, [contactsList])
 
   const onSubmit = (fv: Partial<FilterFormValues>) => {
-    let findContacts = contacts
+    let findContacts = contactsList
 
     if (fv.name) {
       const fvName = fv.name.toLowerCase()
@@ -27,7 +28,9 @@ export const ContactListPage = memo(() => {
     }
 
     if (fv.groupId) {
-      const newGroupContacts = groupContacts.find(({ id }) => id === fv.groupId)
+      const newGroupContacts = groupContactsList.find(
+        ({ id }) => id === fv.groupId
+      )
 
       if (newGroupContacts) {
         findContacts = findContacts.filter(({ id }) =>
@@ -42,7 +45,11 @@ export const ContactListPage = memo(() => {
   return (
     <Row xxl={1}>
       <Col className='mb-3'>
-        <FilterForm initialValues={{}} onSubmit={onSubmit} />
+        <FilterForm
+          initialValues={{}}
+          onSubmit={onSubmit}
+          groupContacts={groupContactsList}
+        />
       </Col>
       <Col>
         <Row xxl={4} className='g-4'>

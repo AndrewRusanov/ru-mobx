@@ -2,19 +2,19 @@ import { Formik } from 'formik'
 import { FormikConfig } from 'formik/dist/types'
 import { memo } from 'react'
 import { Button, Col, Form, InputGroup, Row } from 'react-bootstrap'
-import { useAppSelector } from 'src/store/hooks'
+import { GroupContactsDto } from 'src/types/dto/GroupContactsDto'
 
 export interface FilterFormValues {
   name: string
   groupId: string
 }
 
-interface FilterFormProps extends FormikConfig<Partial<FilterFormValues>> {}
+interface FilterFormProps extends FormikConfig<Partial<FilterFormValues>> {
+  groupContacts: GroupContactsDto[]
+}
 
 export const FilterForm = memo<FilterFormProps>(
-  ({ onSubmit, initialValues = {} }) => {
-    const { groupContacts } = useAppSelector(state => state.groupContacts)
-
+  ({ onSubmit, initialValues = {}, groupContacts }) => {
     return (
       <Formik initialValues={initialValues} onSubmit={onSubmit}>
         {({ handleChange, handleSubmit }) => (

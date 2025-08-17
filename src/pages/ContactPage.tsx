@@ -1,13 +1,14 @@
+import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import { ContactCard } from 'src/components/ContactCard'
 import { Empty } from 'src/components/Empty'
-import { useAppSelector } from 'src/store/hooks'
+import { contactsStore } from 'src/store'
 import { ContactDto } from 'src/types/dto/ContactDto'
 
-export const ContactPage = () => {
-  const { contacts } = useAppSelector(state => state.contacts)
+export const ContactPage = observer(() => {
+  const { contacts } = contactsStore
 
   const { contactId } = useParams<{ contactId: string }>()
   const [contact, setContact] = useState<ContactDto>()
@@ -23,4 +24,4 @@ export const ContactPage = () => {
       </Col>
     </Row>
   )
-}
+})

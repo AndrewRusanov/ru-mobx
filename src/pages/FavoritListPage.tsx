@@ -1,12 +1,15 @@
-import { memo, useEffect, useState } from 'react'
+import { observer } from 'mobx-react-lite'
+import { useEffect, useState } from 'react'
 import { Col, Row } from 'react-bootstrap'
 import { ContactCard } from 'src/components/ContactCard'
-import { useAppSelector } from 'src/store/hooks'
+import { contactsStore } from 'src/store'
 import { ContactDto } from 'src/types/dto/ContactDto'
 
-export const FavoritListPage = memo(() => {
-  const { contacts, favorite } = useAppSelector(state => state.contacts)
+export const FavoritListPage = observer(() => {
+  const { contacts, favorite } = contactsStore
   const [contactsState, setContactsState] = useState<ContactDto[]>([])
+
+  console.log('####:', favorite, contacts)
 
   useEffect(() => {
     setContactsState(() => contacts.filter(({ id }) => favorite.includes(id)))
